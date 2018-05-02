@@ -8,7 +8,6 @@ import random
 from pygame import *
 
 import xlsxwriter
-import sys
 
 fileNum = str(sys.argv[1])
 workbook = xlsxwriter.Workbook('dinoData ' + fileNum + '.xlsx')
@@ -199,6 +198,8 @@ class Cactus(pygame.sprite.Sprite):
         self.rect.left = width + self.rect.width
         self.image = self.images[random.randrange(0,3)]
         self.movement = [-1*speed,0]
+#        self.index = 0
+#        self.counter = 0
 
     def draw(self):
         screen.blit(self.image,self.rect)
@@ -209,29 +210,29 @@ class Cactus(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
-class Ptera(pygame.sprite.Sprite):
-    def __init__(self,speed=5,sizex=-1,sizey=-1):
-        pygame.sprite.Sprite.__init__(self,self.containers)
-        self.images,self.rect = load_sprite_sheet('ptera.png',2,1,sizex,sizey,-1)
-        self.ptera_height = [height*0.82,height*0.75,height*0.60]
-        self.rect.centery = self.ptera_height[random.randrange(0,3)]
-        self.rect.left = width + self.rect.width
-        self.image = self.images[0]
-        self.movement = [-1*speed,0]
-        self.index = 0
-        self.counter = 0
+#class Ptera(pygame.sprite.Sprite):
+#    def __init__(self,speed=5,sizex=-1,sizey=-1):
+#        pygame.sprite.Sprite.__init__(self,self.containers)
+#        self.images,self.rect = load_sprite_sheet('ptera.png',2,1,sizex,sizey,-1)
+#        self.ptera_height = [height*0.82,height*0.75,height*0.60]
+#        self.rect.centery = self.ptera_height[random.randrange(0,3)]
+#        self.rect.left = width + self.rect.width
+#        self.image = self.images[0]
+#        self.movement = [-1*speed,0]
+#        self.index = 0
+#        self.counter = 0
 
-    def draw(self):
-        screen.blit(self.image,self.rect)
-
-    def update(self):
-        if self.counter % 10 == 0:
-            self.index = (self.index+1)%2
-        self.image = self.images[self.index]
-        self.rect = self.rect.move(self.movement)
-        self.counter = (self.counter + 1)
-        if self.rect.right < 0:
-            self.kill()
+#    def draw(self):
+#        screen.blit(self.image,self.rect)
+#
+#    def update(self):
+#        if self.counter % 10 == 0:
+#            self.index = (self.index+1)%2
+#        self.image = self.images[self.index]
+#        self.rect = self.rect.move(self.movement)
+#        self.counter = (self.counter + 1)
+#        if self.rect.right < 0:
+#            self.kill()
 
 
 class Ground():
@@ -306,9 +307,9 @@ def introscreen():
     temp_dino.isBlinking = True
     gameStart = False
 
-    callout,callout_rect = load_image('call_out.png',196,45,-1)
-    callout_rect.left = width*0.05
-    callout_rect.top = height*0.4
+  #  callout,callout_rect = load_image('call_out.png',196,45,-1)
+  #  callout_rect.left = width*0.05
+  # callout_rect.top = height*0.4
 
     temp_ground,temp_ground_rect = load_sprite_sheet('ground.png',15,1,-1,-1,-1)
     temp_ground_rect.left = width/20
@@ -338,7 +339,7 @@ def introscreen():
             screen.blit(temp_ground[0],temp_ground_rect)
             if temp_dino.isBlinking:
                 screen.blit(logo,logo_rect)
-                screen.blit(callout,callout_rect)
+            #    screen.blit(callout,callout_rect)
             temp_dino.draw()
 
             pygame.display.update()
@@ -360,12 +361,12 @@ def gameplay():
     counter = 0
 
     cacti = pygame.sprite.Group()
-    pteras = pygame.sprite.Group()
+   # pteras = pygame.sprite.Group()
     clouds = pygame.sprite.Group()
     last_obstacle = pygame.sprite.Group()
 
     Cactus.containers = cacti
-    Ptera.containers = pteras
+  #  Ptera.containers = pteras
     Cloud.containers = clouds
 
     retbutton_image,retbutton_rect = load_image('replay_button.png',35,31,-1)
@@ -408,6 +409,9 @@ def gameplay():
                         if event.key == pygame.K_DOWN:
                             if not (playerDino.isJumping and playerDino.isDead):
                                 playerDino.isDucking = True
+                                
+                        if event.key == pygame.K_q:#added line end game
+                            gameOver = True;
 
                     if event.type == pygame.KEYUP:
                         if event.key == pygame.K_DOWN:
@@ -415,14 +419,14 @@ def gameplay():
             for c in cacti:
                 c.movement[0] = -1*gamespeed
                 if pygame.sprite.collide_mask(playerDino,c):
-                    playerDino.isDead = True
+                    playerDino.isDead = False
                     #if pygame.mixer.get_init() != None:
                     #    die_sound.play()
 
-            for p in pteras:
-                p.movement[0] = -1*gamespeed
-                if pygame.sprite.collide_mask(playerDino,p):
-                    playerDino.isDead = True
+#            for p in pteras:
+#                p.movement[0] = -1*gamespeed
+#                if pygame.sprite.collide_mask(playerDino,p):
+#                    playerDino.isDead = True
                     #if pygame.mixer.get_init() != None:
                    #     die_sound.play()
 
@@ -436,18 +440,18 @@ def gameplay():
                             last_obstacle.empty()
                             last_obstacle.add(Cactus(gamespeed, 40, 40))
 
-            if len(pteras) == 0 and random.randrange(0,200) == 10 and counter > 500:
-                for l in last_obstacle:
-                    if l.rect.right < width*0.8:
-                        last_obstacle.empty()
-                        last_obstacle.add(Ptera(gamespeed, 46, 40))
+#            if len(pteras) == 0 and random.randrange(0,200) == 10 and counter > 500:
+#                for l in last_obstacle:
+#                    if l.rect.right < width*0.8:
+#                        last_obstacle.empty()
+#                        last_obstacle.add(Ptera(gamespeed, 46, 40))
 
             if len(clouds) < 5 and random.randrange(0,300) == 10:
                 Cloud(width,random.randrange(height/5,height/2))
 
             playerDino.update()
             cacti.update()
-            pteras.update()
+#            pteras.update()
             clouds.update()
             new_ground.update()
             scb.update(playerDino.score)
@@ -462,7 +466,7 @@ def gameplay():
                     highsc.draw()
                     screen.blit(HI_image,HI_rect)
                 cacti.draw(screen)
-                pteras.draw(screen)
+#                pteras.draw(screen)
                 playerDino.draw()
 
                 pygame.display.update()
