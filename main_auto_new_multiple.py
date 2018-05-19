@@ -1,5 +1,5 @@
 #Original Version based on Shivam Shekhar's Chrome-T-Rex_Rush
-#__author__ = "Shivam Shekhar"
+#__author__ = "Omkar Savant"
 
 import os
 import sys
